@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Récord Bolívar - Gestor de Atletas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sidebar (igual que antes) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🏃</div>
+      <div class="logo-text">
+        <h2>Récord Bolívar</h2>
+        <span>Liga de Atletismo</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-view="register">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Registrar Atleta
+      </div>
+      <div class="nav-item" data-view="table">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Tabla General
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="event-info">
+        <div class="trophy">🏆 <span class="label">Evento Actual</span></div>
+        <div class="name">Campeonato Nacional 2025</div>
+        <div class="details">Estadio de Bolívar</div>
+        <div class="details">15 - 17 de Mayo, 2025</div>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar">D</div>
+        <div>
+          <div class="user-name">Digitalizador</div>
+          <div class="user-status"><span class="status-dot"></span> Online</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="view-title">Dashboard</h1>
+        <p id="view-subtitle">Resumen general del evento</p>
+      </div>
+      <div class="stat-cards" id="stat-cards"></div>
+    </div>
+
+    <div class="content">
+      <!-- LEFT PANEL: formulario de registro y ranking (se mantiene) -->
+      <div class="left-panel">
+        <div class="panel-section" id="register-panel">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Registrar Nuevo Atleta
+          </div>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group"><label>👤 Nombre completo</label><input type="text" id="nombre" placeholder="Ej: Juan Pérez"></div>
+              <div class="form-group"><label>🎂 Edad</label><input type="number" id="edad" placeholder="18"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>🏛️ Club</label><input type="text" id="club" placeholder="Club Atlético Bolívar"></div>
+              <div class="form-group"><label>🏅 Liga</label><select id="liga"><option>Bolívar</option><option>Antioquia</option><option>Cundinamarca</option></select></div>
+            </div>
+            <div class="pruebas-container">
+              <div class="pruebas-label"><span>📋 Seleccionar pruebas (Máximo 4)</span><span class="pruebas-badge" id="selected-count-badge">0/4</span></div>
+              <div id="pruebas-tabs-container" class="pruebas-tabs"></div>
+              <div id="sub-tabs-container" class="sub-tabs"></div>
+              <div class="info-text">💡 Haz clic en las pruebas para seleccionar. Límite 4.</div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-outline" id="clear-form">🗑 Limpiar</button>
+              <button class="btn btn-primary" id="save-athlete">📋 Guardar Atleta</button>
+            </div>
+            <div id="form-message" class="form-message"></div>
+          </div>
+        </div>
+
+        <!-- RANKING SECTION -->
+        <div class="panel-section" style="flex:1">
+          <div class="ranking-header">
+            <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Mejores Marcas</div>
+            <select id="ranking-test-select" class="ranking-select"></select>
+          </div>
+          <div id="ranking-list"></div>
+          <button class="btn-ver-ranking" id="refresh-ranking">Actualizar ranking</button>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Vista Dashboard y Tabla -->
+      <div class="right-panel" id="right-panel">
+        <!-- Dashboard -->
+        <div id="dashboard-view" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="table-section" style="border-bottom: none;">
+            <div class="section-title">🏆 Mejores Atletas por Prueba</div>
+          </div>
+          <div id="top-rankings-container" style="padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; overflow-y: auto;"></div>
+          <div class="charts-section">
+            <div class="chart-card"><div class="chart-title">Mejores Marcas por Prueba</div><div class="chart-wrap"><canvas id="barChart"></canvas></div></div>
+            <div class="chart-card"><div class="chart-title">Distribución de Inscripciones</div><div class="chart-wrap" style="position:relative"><canvas id="donutChart"></canvas><div class="donut-center"><div class="donut-num" id="total-inscripciones">0</div><div class="donut-label">Total inscripciones</div></div><div class="donut-legend" id="donut-legend"></div></div></div>
+          </div>
+        </div>
+
+        <!-- Tabla General (con botón "Registrar marca" por cada atleta) -->
+        <div id="table-view" style="display: none; flex-direction: column; height: 100%;">
+          <div class="table-section">
+            <div class="table-header">
+              <div class="section-title">📋 Tabla General de Atletas</div>
+              <div class="table-search-bar"><div class="search-input-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-input" type="text" id="search-athlete" placeholder="Buscar atleta..."></div><button class="btn-filter" id="filter-table">Filtrar</button></div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="athletes-table" id="athletes-table">
+                <thead id="table-header"></thead>
+                <tbody id="table-body"></tbody>
+              </table>
+            </div>
+            <div class="table-footer"><span id="table-info"></span><div class="pagination" id="pagination"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <span>Récord Bolívar v2.0 &nbsp;|&nbsp; Gestor oficial de la Liga de Atletismo de Bolívar</span>
+      <div class="db-status"><span class="db-dot"></span> Base de datos: Conectada</div>
+    </div>
+  </main>
+
+  <!-- MODAL para registrar resultados (mejorado) -->
+  <div id="result-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Registrar marca para <span id="modal-athlete-name"></span></h3>
+      <div class="form-group">
+        <label>Prueba</label>
+        <select id="modal-test-select"></select>
+      </div>
+      <div class="form-group">
+        <label>Valor (segundos o metros)</label>
+        <input type="number" id="result-value" step="any" placeholder="Ej: 11.2 o 6.50">
+      </div>
+      <div class="modal-buttons">
+        <button id="modal-cancel">Cancelar</button>
+        <button id="modal-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

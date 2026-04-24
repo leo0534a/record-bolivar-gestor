@@ -1,0 +1,23 @@
+# Dependencias de Node
+node_modules/
+
+# Base de datos SQLite (contiene datos locales, no se comparte)
+*.db
+*.db-journal
+data/*.db
+
+# Archivos de Electron
+dist/
+out/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Entornos de desarrollo
+.env
+.env.local
