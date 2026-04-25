@@ -5,20 +5,19 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "electron-rebuild",
+    "postinstall": "electron-builder install-app-deps",
     "dist": "electron-builder"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^12.9.0",
     "chart.js": "^4.4.0",
-    "electron": "^27.0.0",
-    "sqlite3": "^5.1.6",
     "exceljs": "^4.4.0"
   },
   "devDependencies": {
-    "electron-builder": "^24.6.4",
-    "electron-rebuild": "^3.2.9"
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
   },
   "build": {
     "appId": "com.recordbolivar.app",
@@ -35,7 +34,11 @@
       "preload.js",
       "database.js",
       "src/**/*",
-      "assets/**/*"
+      "assets/**/*",
+      "node_modules/better-sqlite3/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/better-sqlite3"
     ]
   }
 }

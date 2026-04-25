@@ -25,7 +25,37 @@ function createWindow() {
     },
     icon: path.join(__dirname, 'assets/icon.png')
   });
+
   mainWindow.loadFile('src/index.html');
+
+  // ========== SEGURIDAD Y PROFESIONALIZACIÓN ==========
+  // 1. Ocultar la barra de menú (File, Edit, View, Window, Help)
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.removeMenu();  // Elimina completamente el menú
+
+  // 2. Deshabilitar las herramientas de desarrollador (Ctrl+Shift+I, F12, Ctrl+U)
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type === 'keyDown' && (
+      input.key === 'F12' ||
+      (input.control && input.shift && (input.key === 'I' || input.key === 'J')) ||
+      (input.control && input.key === 'U')
+    )) {
+      event.preventDefault();
+    }
+  });
+
+  // 3. Deshabilitar clic derecho (menú contextual del navegador)
+  mainWindow.webContents.on('context-menu', (e) => {
+    e.preventDefault();
+  });
+
+  // 4. Evitar navegación accidental (arrastrar archivos, etc.)
+  mainWindow.webContents.on('will-navigate', (e, url) => {
+    if (url !== mainWindow.webContents.getURL()) {
+      e.preventDefault();
+    }
+  });
+
   mainWindow.on('closed', () => { mainWindow = null; });
 }
 
@@ -38,7 +68,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// ========== HANDLERS ==========
+// ========== HANDLERS IPC ==========
 ipcMain.handle('save-athlete', async (event, { athlete, selectedTests }) => {
   try {
     const athleteId = await insertAthlete(athlete);
