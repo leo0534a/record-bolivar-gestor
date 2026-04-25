@@ -1,160 +1,455 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Récord Bolívar - Gestor de Atletas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Récord Bolívar — Liga de Atletismo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <!-- Sidebar (igual que antes) -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">🏃</div>
-      <div class="logo-text">
-        <h2>Récord Bolívar</h2>
-        <span>Liga de Atletismo</span>
+<body tabindex="-1">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">Récord Bolívar</span>
+        <span class="brand-sub">Liga de Atletismo</span>
       </div>
     </div>
+
     <nav class="sidebar-nav">
-      <div class="nav-item active" data-view="dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </div>
-      <div class="nav-item" data-view="register">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Registrar Atleta
-      </div>
-      <div class="nav-item" data-view="table">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        Tabla General
-      </div>
+      <span class="nav-label">Navegación</span>
+      <a class="nav-link active" data-view="dashboard" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/>
+          <rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-link" data-view="register" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" y1="8" x2="19" y2="14"/>
+          <line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        <span>Registrar Atleta</span>
+      </a>
+      <a class="nav-link" data-view="table" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/>
+          <line x1="9" y1="12" x2="15" y2="12"/>
+          <line x1="9" y1="16" x2="13" y2="16"/>
+        </svg>
+        <span>Tabla General</span>
+      </a>
+      <a class="nav-link" data-view="config" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Configuración</span>
+      </a>
     </nav>
-    <div class="sidebar-footer">
-      <div class="event-info">
-        <div class="trophy">🏆 <span class="label">Evento Actual</span></div>
-        <div class="name">Campeonato Nacional 2025</div>
-        <div class="details">Estadio de Bolívar</div>
-        <div class="details">15 - 17 de Mayo, 2025</div>
-      </div>
-      <div class="user-info">
+
+    <div class="sidebar-bottom">
+      <button class="theme-toggle" id="theme-toggle" title="Cambiar tema">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <span id="theme-label">Modo claro</span>
+      </button>
+      <div class="user-chip">
         <div class="user-avatar">D</div>
-        <div>
-          <div class="user-name">Digitalizador</div>
-          <div class="user-status"><span class="status-dot"></span> Online</div>
+        <div class="user-info">
+          <span class="user-name">Digitalizador</span>
+          <span class="user-status"><span class="status-dot"></span>En línea</span>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN -->
-  <main class="main">
-    <div class="topbar">
-      <div>
-        <h1 id="view-title">Dashboard</h1>
-        <p id="view-subtitle">Resumen general del evento</p>
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Colapsar menú">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="page-title">
+          <h1 id="view-title">Dashboard</h1>
+          <p id="view-subtitle">Resumen general del evento</p>
+        </div>
       </div>
-      <div class="stat-cards" id="stat-cards"></div>
-    </div>
+      <div class="topbar-right" id="stat-cards"></div>
+    </header>
 
-    <div class="content">
-      <!-- LEFT PANEL: formulario de registro y ranking (se mantiene) -->
-      <div class="left-panel">
-        <div class="panel-section" id="register-panel">
-          <div class="section-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Registrar Nuevo Atleta
-          </div>
-          <div class="form-card">
-            <div class="form-row">
-              <div class="form-group"><label>👤 Nombre completo</label><input type="text" id="nombre" placeholder="Ej: Juan Pérez"></div>
-              <div class="form-group"><label>🎂 Edad</label><input type="number" id="edad" placeholder="18"></div>
+    <div class="views-container">
+
+      <!-- ===== DASHBOARD VIEW ===== -->
+      <div id="dashboard-view" class="view active">
+        <div class="dashboard-grid">
+          <!-- Top rankings por prueba -->
+          <section class="section-block full-width">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M8 21H12M16 21H12M12 21V13M7 4H17L19 9C19 11.2091 17.2091 13 15 13H9C6.79086 13 5 11.2091 5 9L7 4Z"/>
+                  <path d="M5 9H3L2 6H7"/><path d="M19 9H21L22 6H17"/>
+                </svg>
+                Mejores Atletas por Prueba
+              </div>
             </div>
-            <div class="form-row">
-              <div class="form-group"><label>🏛️ Club</label><input type="text" id="club" placeholder="Club Atlético Bolívar"></div>
-              <div class="form-group"><label>🏅 Liga</label><select id="liga"><option>Bolívar</option><option>Antioquia</option><option>Cundinamarca</option></select></div>
+            <div id="top-rankings-container" class="rankings-grid"></div>
+          </section>
+
+          <!-- Ranking por prueba (seleccionable) -->
+          <section class="section-block full-width">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Ranking por Prueba
+              </div>
+              <select id="ranking-test-select" class="select-sm"></select>
             </div>
-            <div class="pruebas-container">
-              <div class="pruebas-label"><span>📋 Seleccionar pruebas (Máximo 4)</span><span class="pruebas-badge" id="selected-count-badge">0/4</span></div>
-              <div id="pruebas-tabs-container" class="pruebas-tabs"></div>
-              <div id="sub-tabs-container" class="sub-tabs"></div>
-              <div class="info-text">💡 Haz clic en las pruebas para seleccionar. Límite 4.</div>
+            <div id="ranking-list" class="ranking-list-horizontal"></div>
+            <div style="padding:0 20px 14px">
+              <button class="btn btn-ghost btn-sm" id="refresh-ranking">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+                </svg>
+                Actualizar
+              </button>
             </div>
-            <div class="btn-row">
-              <button class="btn btn-outline" id="clear-form">🗑 Limpiar</button>
-              <button class="btn btn-primary" id="save-athlete">📋 Guardar Atleta</button>
+          </section>
+
+          <!-- Bar chart -->
+          <section class="section-block chart-section">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Mejores Marcas
+              </div>
+            </div>
+            <div class="chart-wrapper"><canvas id="barChart"></canvas></div>
+          </section>
+
+          <!-- Donut chart -->
+          <section class="section-block chart-section">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 2A10 10 0 0 1 22 12"/>
+                </svg>
+                Distribución de Inscripciones
+              </div>
+            </div>
+            <div class="donut-layout">
+              <div class="donut-canvas-wrap">
+                <canvas id="donutChart"></canvas>
+                <div class="donut-center">
+                  <div class="donut-num" id="total-inscripciones">0</div>
+                  <div class="donut-label">inscripciones</div>
+                </div>
+              </div>
+              <div class="donut-legend" id="donut-legend"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ===== REGISTER VIEW ===== -->
+      <div id="register-view" class="view">
+        <div class="register-layout">
+          <!-- Formulario -->
+          <section class="section-block register-form-section">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Datos del Atleta
+              </div>
+              <span class="editing-badge hidden" id="editing-badge">✏️ Editando</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" placeholder="Ej: Juan Pérez García" autocomplete="off">
+              </div>
+              <div class="form-field">
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" placeholder="18" min="10" max="80">
+              </div>
+              <div class="form-field">
+                <label for="club">Club</label>
+                <input type="text" id="club" placeholder="Club Atlético Bolívar" autocomplete="off">
+              </div>
+              <div class="form-field">
+                <label for="liga">Liga</label>
+                <select id="liga">
+                  <option>Bolívar</option>
+                  <option>Antioquia</option>
+                  <option>Cundinamarca</option>
+                  <option>Valle</option>
+                  <option>Atlántico</option>
+                  <option>Bogotá</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-ghost" id="clear-form">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+                </svg>
+                Cancelar
+              </button>
+              <button class="btn btn-primary" id="save-athlete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span id="save-btn-text">Guardar Atleta</span>
+              </button>
             </div>
             <div id="form-message" class="form-message"></div>
-          </div>
-        </div>
+          </section>
 
-        <!-- RANKING SECTION -->
-        <div class="panel-section" style="flex:1">
-          <div class="ranking-header">
-            <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Mejores Marcas</div>
-            <select id="ranking-test-select" class="ranking-select"></select>
-          </div>
-          <div id="ranking-list"></div>
-          <button class="btn-ver-ranking" id="refresh-ranking">Actualizar ranking</button>
-        </div>
-      </div>
-
-      <!-- RIGHT PANEL: Vista Dashboard y Tabla -->
-      <div class="right-panel" id="right-panel">
-        <!-- Dashboard -->
-        <div id="dashboard-view" style="display: flex; flex-direction: column; height: 100%;">
-          <div class="table-section" style="border-bottom: none;">
-            <div class="section-title">🏆 Mejores Atletas por Prueba</div>
-          </div>
-          <div id="top-rankings-container" style="padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; overflow-y: auto;"></div>
-          <div class="charts-section">
-            <div class="chart-card"><div class="chart-title">Mejores Marcas por Prueba</div><div class="chart-wrap"><canvas id="barChart"></canvas></div></div>
-            <div class="chart-card"><div class="chart-title">Distribución de Inscripciones</div><div class="chart-wrap" style="position:relative"><canvas id="donutChart"></canvas><div class="donut-center"><div class="donut-num" id="total-inscripciones">0</div><div class="donut-label">Total inscripciones</div></div><div class="donut-legend" id="donut-legend"></div></div></div>
-          </div>
-        </div>
-
-        <!-- Tabla General (con botón "Registrar marca" por cada atleta) -->
-        <div id="table-view" style="display: none; flex-direction: column; height: 100%;">
-          <div class="table-section">
-            <div class="table-header">
-              <div class="section-title">📋 Tabla General de Atletas</div>
-              <div class="table-search-bar"><div class="search-input-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-input" type="text" id="search-athlete" placeholder="Buscar atleta..."></div><button class="btn-filter" id="filter-table">Filtrar</button></div>
+          <!-- Pruebas -->
+          <section class="section-block pruebas-section">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Pruebas
+              </div>
+              <div class="pruebas-counter"><span id="selected-count-badge">0</span> / 4</div>
             </div>
-            <div style="overflow-x:auto">
-              <table class="athletes-table" id="athletes-table">
-                <thead id="table-header"></thead>
-                <tbody id="table-body"></tbody>
+            <div id="pruebas-tabs-container" class="category-tabs"></div>
+            <div id="sub-tabs-container" class="sub-tabs"></div>
+            <p class="field-hint">Selecciona hasta 4 pruebas por atleta.</p>
+          </section>
+
+          <!-- Tabla de atletas inscritos -->
+          <section class="section-block reg-athletes-section">
+            <div class="section-header">
+              <div class="section-heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Atletas Inscritos
+              </div>
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="reg-search-athlete" placeholder="Buscar por nombre...">
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="athletes-table" id="reg-athletes-table">
+                <thead>
+                  <tr>
+                    <th class="left">#</th>
+                    <th class="left">Nombre</th>
+                    <th>Edad</th>
+                    <th>Club</th>
+                    <th>Liga</th>
+                    <th>Pruebas</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="reg-table-body"></tbody>
               </table>
             </div>
-            <div class="table-footer"><span id="table-info"></span><div class="pagination" id="pagination"></div></div>
-          </div>
+            <div class="table-footer">
+              <span id="reg-table-info" class="table-info"></span>
+              <div class="pagination" id="reg-pagination"></div>
+            </div>
+          </section>
         </div>
       </div>
-    </div>
 
-    <div class="status-bar">
-      <span>Récord Bolívar v2.0 &nbsp;|&nbsp; Gestor oficial de la Liga de Atletismo de Bolívar</span>
-      <div class="db-status"><span class="db-dot"></span> Base de datos: Conectada</div>
-    </div>
-  </main>
+      <!-- ===== TABLE VIEW ===== -->
+      <div id="table-view" class="view">
+        <section class="section-block table-section-block">
+          <div class="section-header">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              Tabla General de Atletas
+            </div>
+            <div class="table-controls">
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="search-athlete" placeholder="Buscar por nombre...">
+              </div>
+              <button class="btn btn-ghost btn-sm" id="filter-table">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Filtros
+              </button>
+            </div>
+          </div>
+          <!-- Filters panel -->
+          <div class="filters-panel" id="filters-panel" style="display:none">
+            <select id="filter-category" class="select-sm">
+              <option value="">Todas las categorías</option>
+              <option value="Carreras Planas">Carreras Planas</option>
+              <option value="Relevos">Relevos</option>
+              <option value="Relevo Comb.">Relevo Comb.</option>
+              <option value="Vallas">Vallas</option>
+              <option value="Saltos">Saltos</option>
+              <option value="Lanzamientos">Lanzamientos</option>
+            </select>
+            <select id="filter-club" class="select-sm"><option value="">Todos los clubes</option></select>
+            <select id="filter-liga" class="select-sm">
+              <option value="">Todas las ligas</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Antioquia">Antioquia</option>
+              <option value="Cundinamarca">Cundinamarca</option>
+            </select>
+            <button class="btn btn-primary btn-sm" id="apply-filters">Aplicar</button>
+            <button class="btn btn-ghost btn-sm" id="clear-filters">Limpiar</button>
+          </div>
+          <div class="table-scroll">
+            <table class="athletes-table" id="athletes-table">
+              <thead id="table-header"></thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <span id="table-info" class="table-info"></span>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </section>
+      </div>
 
-  <!-- MODAL para registrar resultados (mejorado) -->
-  <div id="result-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Registrar marca para <span id="modal-athlete-name"></span></h3>
-      <div class="form-group">
-        <label>Prueba</label>
-        <select id="modal-test-select"></select>
+      <!-- ===== CONFIG VIEW ===== -->
+      <div id="config-view" class="view">
+        <section class="section-block">
+          <div class="section-header">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Configuración
+            </div>
+          </div>
+          <div class="config-section-body">
+            <div class="config-item">
+              <h3>Exportar datos</h3>
+              <button class="btn btn-primary" id="export-csv-config">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 17 12 23 18 17"/><path d="M12 2v14"/>
+                </svg>
+                Exportar a Excel
+              </button>
+              <p class="field-hint" style="margin-top:8px">Genera un archivo Excel con todos los atletas, sus marcas y categorías.</p>
+            </div>
+            <div class="config-item">
+              <h3>Datos</h3>
+              <button class="btn btn-danger" id="clear-all-data-config">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+                Borrar todos los datos
+              </button>
+              <p class="field-hint" style="margin-top:8px">Elimina permanentemente todos los atletas, inscripciones y resultados.</p>
+            </div>
+          </div>
+        </section>
       </div>
-      <div class="form-group">
-        <label>Valor (segundos o metros)</label>
-        <input type="number" id="result-value" step="any" placeholder="Ej: 11.2 o 6.50">
+
+    </div><!-- /views-container -->
+
+    <footer class="statusbar">
+      <span>Récord Bolívar v3.1 &nbsp;·&nbsp; Liga de Atletismo de Bolívar</span>
+      <div class="db-indicator"><span class="db-dot"></span> Base de datos conectada</div>
+    </footer>
+  </div><!-- /main-wrapper -->
+
+  <!-- Diálogo de confirmación personalizado — evita confirm() nativo de Electron -->
+  <div id="confirm-dialog" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="confirm-backdrop"></div>
+    <div class="modal-box" style="width:400px">
+      <div class="modal-header">
+        <h3 id="confirm-title">Confirmar acción</h3>
+        <p id="confirm-message"></p>
       </div>
-      <div class="modal-buttons">
-        <button id="modal-cancel">Cancelar</button>
-        <button id="modal-save">Guardar</button>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="confirm-cancel-btn">Cancelar</button>
+        <button class="btn btn-danger" id="confirm-ok-btn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="multiple-results-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="multiple-modal-backdrop"></div>
+    <div class="modal-box" style="width:520px">
+      <div class="modal-header">
+        <h3>Registrar Marcas</h3>
+        <p>Atleta: <strong id="multiple-modal-athlete-name"></strong></p>
+      </div>
+      <div class="modal-body" style="padding:0">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3);background:var(--bg-3);border-bottom:1px solid var(--border-subtle)">Prueba</th>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3);background:var(--bg-3);border-bottom:1px solid var(--border-subtle)">Marca (seg / metros)</th>
+            </tr>
+          </thead>
+          <tbody id="multiple-results-tbody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="multiple-modal-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="multiple-modal-save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Guardar marcas
+        </button>
       </div>
     </div>
   </div>

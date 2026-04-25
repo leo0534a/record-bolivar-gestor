@@ -5,7 +5,6 @@ const { app } = require('electron');
 const dbPath = path.join(app.getPath('userData'), 'atletas.db');
 let db;
 
-// Lista completa de pruebas
 const ALL_TESTS = [
   "100m", "200m", "400m", 
   "4x100", "4x400", 
@@ -15,7 +14,6 @@ const ALL_TESTS = [
   "Bala", "Jabalina", "Disco"
 ];
 
-// Tipo de prueba: true = mayor mejor (saltos/lanzamientos), false = menor mejor (carreras/vallas)
 const TEST_TYPE = {
   "100m": false, "200m": false, "400m": false,
   "4x100": false, "4x400": false,
@@ -36,7 +34,6 @@ function initDatabase() {
       club TEXT,
       liga TEXT
     )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS inscripciones (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       athlete_id INTEGER,
@@ -44,7 +41,6 @@ function initDatabase() {
       FOREIGN KEY(athlete_id) REFERENCES atletas(id) ON DELETE CASCADE,
       UNIQUE(athlete_id, test_name)
     )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS resultados (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       athlete_id INTEGER,
@@ -63,10 +59,7 @@ function insertAthlete(athlete) {
     db.run(`INSERT INTO atletas (nombre, fecha_nacimiento, edad, club, liga)
             VALUES (?,?,?,?,?)`,
       [nombre, fecha_nacimiento || null, edad || null, club || null, liga || null],
-      function(err) {
-        if (err) reject(err);
-        else resolve(this.lastID);
-      });
+      function(err) { if (err) reject(err); else resolve(this.lastID); });
   });
 }
 
@@ -74,10 +67,7 @@ function insertRegistrations(athleteId, tests) {
   return new Promise((resolve, reject) => {
     const stmt = db.prepare(`INSERT OR IGNORE INTO inscripciones (athlete_id, test_name) VALUES (?, ?)`);
     tests.forEach(test => stmt.run(athleteId, test));
-    stmt.finalize(err => {
-      if (err) reject(err);
-      else resolve();
-    });
+    stmt.finalize(err => { if (err) reject(err); else resolve(); });
   });
 }
 
@@ -127,7 +117,6 @@ function getAllTests() {
   return ALL_TESTS;
 }
 
-// Obtener las pruebas en las que está inscrito un atleta específico
 function getAthleteTests(athleteId) {
   return new Promise((resolve, reject) => {
     db.all(`SELECT test_name FROM inscripciones WHERE athlete_id = ?`, [athleteId], (err, rows) => {
@@ -137,7 +126,6 @@ function getAthleteTests(athleteId) {
   });
 }
 
-// Obtener top 3 por cada prueba (para dashboard)
 async function getTopRankings() {
   const results = await getResultsByTest();
   const topRankings = {};
@@ -161,7 +149,6 @@ async function getTopRankings() {
   return topRankings;
 }
 
-// Para el dashboard de mejores marcas (gráfico de barras)
 async function getBestMarks() {
   const results = await getResultsByTest();
   const bestMarks = [];
@@ -180,6 +167,96 @@ async function getBestMarks() {
   return bestMarks;
 }
 
+function deleteAthlete(athleteId) {
+  return new Promise((resolve, reject) => {
+    db.run(`DELETE FROM atletas WHERE id = ?`, [athleteId], (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+function updateAthlete(athleteId, data) {
+  return new Promise((resolve, reject) => {
+    const { nombre, edad, club, liga } = data;
+    db.run(`UPDATE atletas SET nombre = ?, edad = ?, club = ?, liga = ? WHERE id = ?`,
+      [nombre, edad || null, club || null, liga || null, athleteId], (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+  });
+}
+
+function replaceRegistrations(athleteId, newTests) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await new Promise((res, rej) => {
+        db.run(`DELETE FROM inscripciones WHERE athlete_id = ?`, [athleteId], (err) => {
+          if (err) rej(err); else res();
+        });
+      });
+      const stmt = db.prepare(`INSERT INTO inscripciones (athlete_id, test_name) VALUES (?, ?)`);
+      for (const test of newTests) {
+        await new Promise((res, rej) => {
+          stmt.run(athleteId, test, (err) => { if (err) rej(err); else res(); });
+        });
+      }
+      stmt.finalize((err) => {
+        if (err) reject(err); else resolve();
+      });
+    } catch (err) { reject(err); }
+  });
+}
+
+function getAthleteById(athleteId) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM atletas WHERE id = ?`, [athleteId], (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+}
+
+function clearAllData() {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.run(`DELETE FROM resultados`, (err) => { if (err) reject(err); });
+      db.run(`DELETE FROM inscripciones`, (err) => { if (err) reject(err); });
+      db.run(`DELETE FROM atletas`, (err) => { if (err) reject(err); else resolve(); });
+    });
+  });
+}
+
+function getAthletesWithResults() {
+  return new Promise((resolve, reject) => {
+    db.all(`
+      SELECT 
+        a.id,
+        a.nombre,
+        a.edad,
+        a.club,
+        a.liga,
+        r.test_name,
+        r.valor
+      FROM atletas a
+      LEFT JOIN resultados r ON a.id = r.athlete_id
+      ORDER BY a.id DESC, r.test_name
+    `, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+}
+
+function getCurrentResult(athleteId, testName) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT valor FROM resultados WHERE athlete_id = ? AND test_name = ?`, [athleteId, testName], (err, row) => {
+      if (err) reject(err);
+      else resolve(row ? row.valor : null);
+    });
+  });
+}
+
 module.exports = {
   initDatabase,
   insertAthlete,
@@ -190,5 +267,13 @@ module.exports = {
   getAllTests,
   getAthleteTests,
   getTopRankings,
-  getBestMarks
+  getBestMarks,
+  deleteAthlete,
+  updateAthlete,
+  replaceRegistrations,
+  getAthleteById,
+  clearAllData,
+  getAthletesWithResults,
+  getCurrentResult,
+  getResultsByTest
 };

@@ -5,16 +5,37 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "electron-rebuild"
+    "postinstall": "electron-rebuild",
+    "dist": "electron-builder"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "chart.js": "^4.4.0",
     "electron": "^27.0.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "exceljs": "^4.4.0"
   },
   "devDependencies": {
+    "electron-builder": "^24.6.4",
     "electron-rebuild": "^3.2.9"
+  },
+  "build": {
+    "appId": "com.recordbolivar.app",
+    "productName": "Récord Bolívar",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "database.js",
+      "src/**/*",
+      "assets/**/*"
+    ]
   }
 }
